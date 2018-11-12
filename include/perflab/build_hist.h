@@ -21,7 +21,6 @@ class GHistBuilder {
                  const GHistIndexMatrix& gmat,
                  std::vector<GHistEntry>* hist);
 
- private:
   /*! \brief number of threads for parallel computation */
   size_t nthread_;
   /*! \brief number of all bins over all features */

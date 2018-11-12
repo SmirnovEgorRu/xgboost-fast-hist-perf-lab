@@ -1,18 +1,22 @@
-cmake_minimum_required(VERSION 3.2)
-project(xgboost-fast-hist-perf-lab C CXX)
-include(cmake/OpenMP.cmake)
-include(cmake/Utils.cmake)
+cmake_minimum_required(VERSION 2.8)
+project(xgboost-fast-hist-perf-lab)
+find_package(OpenMP)
 
-set_default_configuration_release()
-msvc_use_static_runtime()
+include_directories(${PROJECT_SOURCE_DIR}/include)
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+if(OpenMP_CXX_FOUND OR OPENMP_FOUND)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2 -g -std=c++11  ${OpenMP_CXX_FLAGS}")
+endif()
 
 FILE(GLOB SOURCE "src/*.cc")
 
 add_executable(perflab ${SOURCE})
-target_link_libraries(perflab PUBLIC OpenMP::OpenMP_CXX)
-target_include_directories(perflab PRIVATE ${PROJECT_SOURCE_DIR}/include)
-
-set_output_directory(perflab ${PROJECT_SOURCE_DIR})
+set_target_properties(perflab PROPERTIES
+  RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}
+  RUNTIME_OUTPUT_DIRECTORY_DEBUG ${PROJECT_SOURCE_DIR}
+  RUNTIME_OUTPUT_DIRECTORY_RELEASE ${PROJECT_SOURCE_DIR}
+  LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}
+  LIBRARY_OUTPUT_DIRECTORY_DEBUG ${PROJECT_SOURCE_DIR}
+  LIBRARY_OUTPUT_DIRECTORY_RELEASE ${PROJECT_SOURCE_DIR})

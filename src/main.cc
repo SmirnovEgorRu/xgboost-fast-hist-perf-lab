@@ -26,7 +26,7 @@ int main(int argc, char** argv) {
     return 1;
   }
   const std::string record_path(argv[1]);
-  const int nthread = std::stoi(argv[2]); 
+  const int nthread = std::stoi(argv[2]);
   CHECK_GT(nthread, 0) << "There should be positive number of threads";
   CHECK_LE(nthread, omp_get_max_threads()) << "Too many threads";
 
@@ -48,7 +48,7 @@ int main(int argc, char** argv) {
     = ParseNewlineSeparatedText<perflab::GradientPair>(record_path + "/gpair-198-0.txt");
 
   // One histogram is created for each instance set
-  const int num_instance_set = 2920;
+  const int num_instance_set = 2;
   std::vector<std::vector<size_t>> instance_set;
   std::vector<std::vector<perflab::GHistEntry>> histogram(
     num_instance_set, std::vector<perflab::GHistEntry>(nbin));
@@ -60,15 +60,19 @@ int main(int argc, char** argv) {
 
   LOG(INFO) << "Data loaded in " << (dmlc::GetTime() - tstart) << " seconds";
 
-  // Initialize histogram builder
-  perflab::GHistBuilder hist_builder(nthread, nbin);
+  size_t threads[] = { 1,2,4,8,14,20,24,28};
 
-  // Compute histograms
-  tstart = dmlc::GetTime();
-  for (int i = 0; i < num_instance_set; ++i) {
-    hist_builder.BuildHist(gpair, instance_set[i], gmat, &histogram[i]);
+  for(size_t iT = 0; iT < sizeof(threads)/sizeof(size_t); ++iT)
+  {
+    // Initialize histogram builder
+    perflab::GHistBuilder hist_builder(threads[iT], nbin);
+    tstart = dmlc::GetTime();
+    // Compute histograms
+    for (int i = 1; i < num_instance_set; ++i) {
+      hist_builder.BuildHist(gpair, instance_set[i], gmat, &histogram[i]);
+    }
+    LOG(INFO) << "Gradient histograms computed (threads = " << threads[iT] << ") in "<< (dmlc::GetTime() - tstart) << " seconds";
   }
-  LOG(INFO) << "Gradient histograms computed in " << (dmlc::GetTime() - tstart) << " seconds";
 
   return 0;
 }

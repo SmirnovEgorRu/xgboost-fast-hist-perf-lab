@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <vector>
+#include <stdint.h>
 
 namespace perflab {
 
@@ -100,9 +101,9 @@ struct GHistIndexMatrix {
 /*! \brief sums of gradient statistics corresponding to a histogram bin */
 struct GHistEntry {
   /*! \brief sum of first-order gradient statistics */
-  double sum_grad{0};
+  float sum_grad{0};
   /*! \brief sum of second-order gradient statistics */
-  double sum_hess{0};
+  float sum_hess{0};
 
   GHistEntry()  = default;
 
