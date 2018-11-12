@@ -1,4 +1,4 @@
-The `hist` method of XGBoost scales poorly on multi-core CPUs: a demo script
+Optimizations of the `hist` method of XGBoost whcih scales poorly on multi-core CPUs
 ============================================================================
 # Overview
 
@@ -13,7 +13,7 @@ fix and improve.
 
 We applied practice used in [Intel® Data Analytics Acceleration Library \(Intel® DAAL\)](https://github.com/intel/daal) for Gradient Boosting optimizations to this benchmarks, result are below.
 
-# Optimizations for Intel° Architecture
+# Optimizations for Intel® Architecture
 
 ### Removing of floating point numbers conversion: 
 
