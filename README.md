@@ -22,7 +22,7 @@ We have found that XGBoost uses “float” for gradients pairs, but “double�
 |# of cores               |1   |2  |4  |8  |14  |20  |24  |28  |
 |:------------------------|----|---|---|---|----|----|----|----|
 |original (-O2 option), s |3.4 |3.6|7.1|7.5|12.6|19.1|20.1|25.3|
-|w/o convertaion, s       |2.5 |2.4|3.3|5.3|7.0 |10.3|11.5|12.7|
+|w/o conversion, s        |2.5 |2.4|3.3|5.3|7.0 |10.3|11.5|12.7|
 
 ### Threading:
 At the current implementation we see that XGBoost builds a histogram by blocks of size 8. In the data set "rowind-198-?.txt" -  indexes of samples for some node in a tree. We can see that many of them contains only 10-500 samples. It is too small number to try to parallelize it, in this case overhead for creation of the tasks by OMP can be larger than useful work for histogram computation. We tried to limit block size by 512 rows and now we don’t see performance degradation with increase of thread number:
@@ -30,7 +30,7 @@ At the current implementation we see that XGBoost builds a histogram by blocks o
 |# of cores               |1   |2  |4  |8  |14  |20  |24  |28  |
 |:------------------------|----|---|---|---|----|----|----|----|
 |original (-O2 option), s |3.4 |3.6|7.1|7.5|12.6|19.1|20.1|25.3|
-|w/o convertaion, s       |2.5 |2.4|3.3|5.3|7.0 |10.3|11.5|12.7|
+|w/o conversion, s        |2.5 |2.4|3.3|5.3|7.0 |10.3|11.5|12.7|
 |512-rows blocking, s     |2.6 |2.2|2.8|2.6|2.9 |3.2 |2.8 |2.0 |
 
 ![New performance scaling on C5.9xlarge](./scaling2.png)
